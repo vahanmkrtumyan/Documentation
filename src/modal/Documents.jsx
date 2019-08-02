@@ -24,9 +24,6 @@ const Documents = props => {
 
     console.log(urls);
 
-    agr.url.push(urls);
-
-    console.log(agr);
 
     // firestore
     //   .collection(`agreements`)
@@ -38,7 +35,7 @@ const Documents = props => {
     setAgreementName(e.target.value);
     console.log(agreementName);
     console.log(agreements);
-    console.log(urls)
+    console.log(urls);
   };
 
   const handleSelect = e => {
@@ -66,8 +63,7 @@ const Documents = props => {
       },
 
       error => {
-        // A full list of error codes is available at
-        // https://firebase.google.com/docs/storage/web/handle-errors
+        console.log(error);
         switch (error.code) {
           case "storage/unauthorized":
             // User doesn't have permission to access the object
@@ -81,7 +77,7 @@ const Documents = props => {
       () => {
         // Upload completed successfully, now we can get the download URL
         uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-          setUrl([{ Պայմանագիր: downloadURL }]);
+          setUrl(downloadURL);
           swal({ icon: "success", text: "Բեռնված է։" });
           setDisabled(false);
           console.log(downloadURL);
