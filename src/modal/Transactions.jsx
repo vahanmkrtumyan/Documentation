@@ -5,42 +5,35 @@ import useStyles from "../components/Classes";
 
 const Transactions = props => {
   let [gumar, setGumar] = useState("");
-  let [tvogh, setTvogh] = useState("");
+  let [tvogh, setTvogh] = useState(props.agreement.name1);
 
   const classes = useStyles();
 
   function handleSubmit(e) {
-    //e.preventDefault();
+    e.preventDefault();
 
     let tvo = tvogh;
 
     let agreement = props.agreement;
     let agr = Object.assign({}, agreement);
 
-    if (tvogh === agr.name1) {
-      agr.given = agr.given + gumar;
+    if (tvogh !== agr.name2) {
+      agr.given = Number(agr.given) + Number(gumar);
     } else {
       agr.given = agr.given - gumar;
     }
 
-    console.log(agreement);
+    console.log(agr);
 
     // firestore
     //   .collection(`asd`)
     //   .doc(`${props.agreement.id}`)
     //   .set({ gumar: gumar, tvogh: tvogh });
 
-    // firestore
-    //   .collection(`agreements`)
-    //   .doc(`${this.state.agreement.id}`)
-    //   .update(agreement);
-    // this.setState({
-    //   company: {
-    //     id: "",
-    //     tvogh: "",
-    //     gumar: ""
-    //   }
-    // });
+    firestore
+      .collection(`agreements`)
+      .doc(`${agreement.id}`)
+      .update(agr);
   }
 
   return props.show ? (
@@ -76,7 +69,7 @@ const Transactions = props => {
       </form>
       <button
         onClick={function(event) {
-          handleSubmit();
+          handleSubmit(event);
           props.close();
         }}
         style={{

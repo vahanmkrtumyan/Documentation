@@ -4,12 +4,17 @@ import "./App.css";
 import CompanyInput from "./components/CompanyInput";
 import AgreementInput from "./components/AgreementInput";
 import Agreements from "./components/Agreements";
+import Navbar from "./components/Navbar";
+import Home from "./components/Home";
 
 function App() {
   return (
     <div className="App">
-      <Route path="/" component={Agreements} exact />
+      <Navbar />
+      <Route path="/" component={Home} exact />
       <Route path="/agreementinput" component={AgreementInput} />
+      <Route path="/Agreements" component={Agreements} />
+      <Route path="/CompanyInput" component={CompanyInput} />
     </div>
   );
 }

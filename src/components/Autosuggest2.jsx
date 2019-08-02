@@ -8,16 +8,9 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { firestore } from "../firebase";
-import Suggestions from "./Suggestions";
 
-console.log(Suggestions);
 
 const suggestions = [];
-
-function create(doc) {
-  suggestions = [];
-  console.log([...suggestions, ...doc]);
-}
 
 firestore
   .collection("companies")
@@ -27,8 +20,6 @@ firestore
       suggestions.push({ label: doc.data().name });
     });
   });
-
-console.log(suggestions);
 
 function renderInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;

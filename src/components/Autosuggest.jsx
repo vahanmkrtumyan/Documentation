@@ -8,9 +8,8 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { firestore } from "../firebase";
-import Suggestions from "./Suggestions";
 
-console.log(Suggestions);
+
 
 const suggestions = [];
 
@@ -25,7 +24,6 @@ firestore
     });
   });
 
-console.log(suggestions);
 
 function renderInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;

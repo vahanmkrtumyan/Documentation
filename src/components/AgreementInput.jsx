@@ -14,6 +14,7 @@ import swal from "sweetalert";
 import IntegrationAutosuggest from "./Autosuggest";
 import IntegrationAutosuggest2 from "./Autosuggest2";
 import "../App.css";
+import Agreements from "./Agreements";
 
 const AgreementInput = () => {
   let [number, setNumber] = useState("");
@@ -23,11 +24,10 @@ const AgreementInput = () => {
   let [currency, setCurrency] = useState("AMD");
   let [type, setType] = useState("Անհատույց");
   let [given, setGiven] = useState([]);
-  let [companies, setCompanies] = useState([]);
-  let [comp1, setComp1] = useState("");
   let [disabled, setDisabled] = useState(false);
-  let [url, setUrl] = useState(false);
+  let [url, setUrl] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [deadlineDate, setDeadlineDate] = useState(new Date());
 
   const classes = useStyles();
 
@@ -35,7 +35,9 @@ const AgreementInput = () => {
     setSelectedDate(date);
   }
 
-  console.log(companies);
+  function handleDateChange(date) {
+    setDeadlineDate(date);
+  }
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -48,6 +50,7 @@ const AgreementInput = () => {
       type,
       given,
       selectedDate,
+      deadlineDate,
       url
     };
     firestore
@@ -102,7 +105,7 @@ const AgreementInput = () => {
       () => {
         // Upload completed successfully, now we can get the download URL
         uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-          setUrl({ downloadURL });
+          setUrl([{ Պայմանագիր: downloadURL }]);
           swal({ icon: "success", text: "Բեռնված է։" });
           setDisabled(false);
         });
@@ -111,124 +114,140 @@ const AgreementInput = () => {
   };
 
   return (
-    <div className="form-style-6">
-      <form>
-        <label htmlFor="setNumber" style={{ display: "block" }}>
-          Պայմանագրի համար
-        </label>
-        <input
-          placeholder=" Պայմանագրի համար"
-          type="text"
-          name="setNumber"
-          value={number}
-          onChange={e => setNumber(e.target.value)}
-        />
-        <label htmlFor="setName1" style={{ display: "block" }}>
-          Առաջին կազմակերպության անվանում
-        </label>
-        <IntegrationAutosuggest asd={newValue => setName1(newValue)} />
-        {/* <input
+    <div>
+      <div className="form-style-6">
+        <form>
+          <label htmlFor="setNumber" style={{ display: "block" }}>
+            Պայմանագրի համար
+          </label>
+          <input
+            placeholder=" Պայմանագրի համար"
+            type="text"
+            name="setNumber"
+            value={number}
+            onChange={e => setNumber(e.target.value)}
+          />
+          <label htmlFor="setName1" style={{ display: "block" }}>
+            Առաջին կազմակերպության անվանում
+          </label>
+          <IntegrationAutosuggest asd={newValue => setName1(newValue)} />
+          {/* <input
           placeholder="Առաջին կազմակերպության անվանում"
           type="text"
           name="setName1"
           value={name1}
           onChange={e => setName1(e.target.value)}
         /> */}
-        <label htmlFor="setName2" style={{ display: "block" }}>
-          Երկրորդ կազմակերպության անվանում
-        </label>
-        <IntegrationAutosuggest2 asd={newValue => setName2(newValue)} />
-        {/* <input
+          <label htmlFor="setName2" style={{ display: "block" }}>
+            Երկրորդ կազմակերպության անվանում
+          </label>
+          <IntegrationAutosuggest2 asd={newValue => setName2(newValue)} />
+          {/* <input
           placeholder="Երկրորդ կազմակերպության անվանում"
           type="text"
           name="setName2"
           value={name2}
           onChange={e => setName2(e.target.value)}
         /> */}
-        <label htmlFor="setHashvapah" style={{ display: "block" }}>
-          Արժույթ
-        </label>
-        <select
-          name="setHashvapah"
-          value={currency}
-          onChange={e => setCurrency(e.target.value)}
-        >
-          <option defaultValue value="AMD">
-            AMD
-          </option>
-          <option value="RUB">RUB</option>
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-          <option value="Մուլտի">Մուլտի</option>
-        </select>
-        <label htmlFor="setAmount" style={{ display: "block" }}>
-          Պայմանագրի գումար
-        </label>
-        <input
-          placeholder="Պայմանագրի գումար"
-          type="number"
-          name="setAmount"
-          value={amount}
-          onChange={e => setAmount(e.target.value)}
-        />
-        <label htmlFor="setRemaining" style={{ display: "block" }}>
-          Տրված գումար
-        </label>
-        <input
-          placeholder="Տրված գումար"
-          type="number"
-          name="setRemaining"
-          value={given}
-          onChange={e => setGiven(e.target.value)}
-        />
-        <label htmlFor="setAmount" style={{ display: "block" }}>
-          Պայմանագրի տեսակ
-        </label>
-        <select
-          name="setHashvapah"
-          value={type}
-          onChange={e => setType(e.target.value)}
-        >
-          <option defaultValue value="Անհատույց">
-            Անհատույց
-          </option>
-          <option value="Տոկոսով">Տոկոսով</option>
-        </select>
+          <label htmlFor="setHashvapah" style={{ display: "block" }}>
+            Արժույթ
+          </label>
+          <select
+            name="setHashvapah"
+            value={currency}
+            onChange={e => setCurrency(e.target.value)}
+          >
+            <option defaultValue value="AMD">
+              AMD
+            </option>
+            <option value="RUB">RUB</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="Մուլտի">Մուլտի</option>
+          </select>
+          <label htmlFor="setAmount" style={{ display: "block" }}>
+            Պայմանագրի գումար
+          </label>
+          <input
+            placeholder="Պայմանագրի գումար"
+            type="number"
+            name="setAmount"
+            value={amount}
+            onChange={e => setAmount(e.target.value)}
+          />
+          <label htmlFor="setRemaining" style={{ display: "block" }}>
+            Տրված գումար
+          </label>
+          <input
+            placeholder="Տրված գումար"
+            type="number"
+            name="setRemaining"
+            value={given}
+            onChange={e => setGiven(e.target.value)}
+          />
+          <label htmlFor="setAmount" style={{ display: "block" }}>
+            Պայմանագրի տեսակ
+          </label>
+          <select
+            name="setHashvapah"
+            value={type}
+            onChange={e => setType(e.target.value)}
+          >
+            <option defaultValue value="Անհատույց">
+              Անհատույց
+            </option>
+            <option value="Տոկոսով">Տոկոսով</option>
+          </select>
 
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Grid container className={classes.grid} justify="space-around">
-            <KeyboardDatePicker
-              margin="normal"
-              id="mui-pickers-date"
-              label="Պայմանագրի կնքման օր"
-              value={selectedDate}
-              onChange={handleDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date"
-              }}
-            />
-          </Grid>
-        </MuiPickersUtilsProvider>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Grid container className={classes.grid} justify="space-around">
+              <KeyboardDatePicker
+                margin="normal"
+                id="mui-pickers-date"
+                label="Պայմանագրի կնքման օր"
+                value={selectedDate}
+                onChange={handleDateChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date"
+                }}
+              />
+            </Grid>
+          </MuiPickersUtilsProvider>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Grid container className={classes.grid} justify="space-around">
+              <KeyboardDatePicker
+                margin="normal"
+                id="mui-pickers-date"
+                label="Պայմանագրի վերջնաժամկետ"
+                value={deadlineDate}
+                onChange={handleDateChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date"
+                }}
+              />
+            </Grid>
+          </MuiPickersUtilsProvider>
+          <div className="text-left" style={{ margin: "35px 0px" }}>
+            <div className="image-upload">
+              <label htmlFor="file-input">
+                <img src="https://goo.gl/pB9rpQ" />
+              </label>
 
-        <div className="text-left" style={{ margin: "35px 0px" }}>
-          <div class="image-upload">
-            <label for="file-input">
-              <img src="https://goo.gl/pB9rpQ" />
-            </label>
-
-            <input id="file-input" type="file" onChange={handleSelect} />
+              <input id="file-input" type="file" onChange={handleSelect} />
+            </div>
           </div>
-        </div>
 
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={handleSubmit}
-        >
-          Հաստատել
-        </Button>
-      </form>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={handleSubmit}
+          >
+            Հաստատել
+          </Button>
+        </form>
+      </div>
+      <Agreements />
     </div>
   );
 };
