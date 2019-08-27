@@ -15,14 +15,14 @@ const suggestions = [];
 
 
 
-firestore
-  .collection("companies")
-  .get()
-  .then(snapshot => {
-    snapshot.docs.forEach(doc => {
-      suggestions.push({ label: doc.data().name });
-    });
-  });
+// firestore
+//   .collection("companies")
+//   .get()
+//   .then(snapshot => {
+//     snapshot.docs.forEach(doc => {
+//       suggestions.push({ label: doc.data().name });
+//     });
+//   });
 
 
 function renderInputComponent(inputProps) {

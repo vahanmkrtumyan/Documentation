@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { firestore, storage } from "../firebase";
 import "./modal.css";
-import useStyles from "../components/Classes";
 import swal from "sweetalert";
 
 const Documents = props => {
   let [agreementName, setAgreementName] = useState("Պայման");
   let [agreements, setAgreements] = useState([]);
   let [disabled, setDisabled] = useState(true);
-  let [urls, setUrl] = useState({});
-
-  const classes = useStyles();
+  let [urls, setUrl] = useState("");
 
   useEffect(() => {
     setAgreements(props.agreement.url);
@@ -23,7 +20,6 @@ const Documents = props => {
     let agr = Object.assign({}, agreements);
 
     console.log(urls);
-
 
     // firestore
     //   .collection(`agreements`)
@@ -46,8 +42,10 @@ const Documents = props => {
     var metadata = {
       conetentType: "pdf"
     };
-    var storageRef = storage.ref("statements/" + agreementName);
-    var uploadTask = storageRef.put(file, metadata);
+    let storageRef = storage.ref("files");
+    var uploadTask = storageRef
+      .child("images/" + agreementName)
+      .put(file, metadata);
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(

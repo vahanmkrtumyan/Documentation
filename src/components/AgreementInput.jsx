@@ -35,7 +35,7 @@ const AgreementInput = () => {
     setSelectedDate(date);
   }
 
-  function handleDateChange(date) {
+  function handleDateChange1(date) {
     setDeadlineDate(date);
   }
 
@@ -68,6 +68,7 @@ const AgreementInput = () => {
   };
 
   const handleSelect = e => {
+    e.preventDefault();
     const file = e.target.files[0];
 
     var metadata = {
@@ -220,7 +221,7 @@ const AgreementInput = () => {
                 id="mui-pickers-date"
                 label="Պայմանագրի վերջնաժամկետ"
                 value={deadlineDate}
-                onChange={handleDateChange}
+                onChange={handleDateChange1}
                 KeyboardButtonProps={{
                   "aria-label": "change date"
                 }}
@@ -247,7 +248,7 @@ const AgreementInput = () => {
           </Button>
         </form>
       </div>
-      <Agreements />
+      {/* <Agreements /> */}
     </div>
   );
 };

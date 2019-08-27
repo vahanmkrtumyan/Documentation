@@ -1,18 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { firestore, storage } from "../firebase";
+import Grid from "@material-ui/core/Grid";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from "@material-ui/pickers";
 import "./modal.css";
 import useStyles from "../components/Classes";
 
 const AgreementChange = props => {
   let [gumar, setGumar] = useState("");
   let [currency, setCurrency] = useState("");
+  let [number, setNumber] = useState("");
+  let [selectedDate, setSelectedDate] = useState("");
+  let [deadlineDate, setDeadlineDate] = useState("");
 
   const classes = useStyles();
 
   useEffect(() => {
+    setNumber(props.number);
     setCurrency(props.agreement.currency);
+    setGumar(props.agreement.gumar);
+
     console.log(currency);
   }, [props.agreement]);
+
+  function handleDateChange(date) {
+    setSelectedDate(date);
+  }
+
+  function handleDateChange1(date) {
+    setDeadlineDate(date);
+    console.log(deadlineDate);
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -27,10 +48,21 @@ const AgreementChange = props => {
     if (currency) {
       agr.currency = currency;
     }
-    // agr.amount = gumar;
-    // agr.currency = currency;
 
-    console.log(agr);
+    if (number) {
+      agr.number = number;
+    }
+
+    if (selectedDate) {
+      agr.selectedDate = selectedDate;
+    }
+
+    if (deadlineDate) {
+      agr.deadlineDate = deadlineDate;
+    }
+
+    console.log(agr)
+
     firestore
       .collection(`agreements`)
       .doc(`${agreement.id}`)
@@ -63,8 +95,18 @@ const AgreementChange = props => {
     <div className="Modal">
       {" "}
       <form className="form-style-6">
+        <label htmlFor="number" style={{ display: "block" }}>
+          Գումար
+        </label>
+        <input
+          type="number"
+          placeholder="Համար"
+          name="number"
+          value={number}
+          onChange={e => setNumber(e.target.value)}
+        />
         <label htmlFor="gumar" style={{ display: "block" }}>
-          Պայամանագրի գումար
+          Արժույթ
         </label>
         <select
           name="gumar"
@@ -82,7 +124,7 @@ const AgreementChange = props => {
           <option value="USD">USD</option>
           <option value="Մուլտի">Մուլտի</option>
         </select>
-        <label htmlFor="hashvapah" style={{ display: "block" }}>
+        <label htmlFor="gumar" style={{ display: "block" }}>
           Գումար
         </label>
         <input
@@ -92,6 +134,34 @@ const AgreementChange = props => {
           value={gumar}
           onChange={e => setGumar(e.target.value)}
         />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid container className={classes.grid} justify="space-around">
+            <KeyboardDatePicker
+              margin="normal"
+              id="mui-pickers-date"
+              label="Պայմանագրի կնքման օր"
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date"
+              }}
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid container className={classes.grid} justify="space-around">
+            <KeyboardDatePicker
+              margin="normal"
+              id="mui-pickers-date"
+              label="Պայմանագրի վերջնաժամկետ"
+              value={deadlineDate}
+              onChange={handleDateChange1}
+              KeyboardButtonProps={{
+                "aria-label": "change date"
+              }}
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
       </form>
       <button
         onClick={function(event) {

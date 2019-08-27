@@ -16,6 +16,9 @@ const Home = ({ currentUser, loading, ...props }) => {
         case "Karlen Karslyan":
           props.history.push("/Agreements");
           break;
+        case "Aghasy Grigoryan":
+          props.history.push("/Agreements");
+          break;
         case "Vahan Mkrtumyan":
           props.history.push("/Agreements");
           break;

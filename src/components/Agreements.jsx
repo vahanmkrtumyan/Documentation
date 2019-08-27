@@ -7,12 +7,14 @@ import Backdrop from "../modal/Backdrop";
 import { ConnectToUser } from "./ConnectUser";
 import CompanyChange from "../modal/CompanyChange";
 import AgreementChange from "./../modal/AgreementChange";
-import Documents from './../modal/Documents';
+import Document from "./../modal/Document";
+import "../App.css";
 
 const Agreements = ({ currentUser, loading, ...props }) => {
   let [agreements, setAgreements] = useState([]);
   let [first, setFirst] = useState("");
   let [second, setSecond] = useState("");
+  let [currency, setCurrency] = useState("");
   let [agreement, setAgreement] = useState({ id: "" });
   let [show, setShow] = useState(false);
   let [show1, setShow1] = useState(false);
@@ -34,8 +36,6 @@ const Agreements = ({ currentUser, loading, ...props }) => {
     setShow1(false);
     setShow2(false);
   };
-
-  
 
   const data1 = [...agreements] || [];
 
@@ -59,10 +59,16 @@ const Agreements = ({ currentUser, loading, ...props }) => {
       d.getDate() + "/" + months[d.getMonth()] + "/" + d.getFullYear() + " ";
     item.date = newD;
 
-    let f = new Date(item.deadlineDate.seconds * 1000);
+    let f = new Date(item.selectedDate.seconds * 1000);
     let newF =
       f.getDate() + "/" + months[f.getMonth()] + "/" + f.getFullYear() + " ";
     item.date = newF;
+
+    let g = item.deadlineDate ? new Date(item.deadlineDate.seconds * 1000) : "";
+    let newFs = g
+      ? g.getDate() + "/" + months[g.getMonth()] + "/" + g.getFullYear() + " "
+      : "";
+    item.deadline = newFs;
 
     return item;
   });
@@ -87,6 +93,13 @@ const Agreements = ({ currentUser, loading, ...props }) => {
     return false;
   });
 
+  let filtered3 = filtered2.filter(function(agreement) {
+    if (agreement.currency.toLowerCase().includes(currency.toLowerCase()))
+      return true;
+
+    return false;
+  });
+
   const handleAdd = agreement => {
     setAgreement(agreement);
     setShow(true);
@@ -101,8 +114,6 @@ const Agreements = ({ currentUser, loading, ...props }) => {
     setAgreement(agreement);
     setShow2(true);
   };
-
-
 
   return (
     <div>
@@ -128,11 +139,21 @@ const Agreements = ({ currentUser, loading, ...props }) => {
           value={second}
           onChange={e => setSecond(e.target.value)}
         />
+        <label htmlFor="setSecond" style={{ display: "inline-block" }}>
+          Արժույթ
+        </label>
+        <input
+          placeholder="Արժույթ"
+          type="text"
+          name="setSecond"
+          value={currency}
+          onChange={e => setCurrency(e.target.value)}
+        />
       </div>
       <h2>Պայմանագրեր</h2>
       <table className="table">
-        <thead>
-          <tr>
+        <thead style={{ position: "sticky" }}>
+          <tr style={{ position: "sticky" }}>
             <th>Համար</th>
             <th>Կնքված</th>
             <th>Առաջին</th>
@@ -158,9 +179,9 @@ const Agreements = ({ currentUser, loading, ...props }) => {
           </tr>
         </thead>
         <tbody>
-          {filtered2.map(agreement => (
+          {filtered3.map(agreement => (
             <tr key={agreement.id}>
-              <td onClick={() => handleDoc(agreement)}>{agreement.number}</td>
+              <td>{agreement.number}</td>
               <td>{agreement.date}</td>
               <td>{agreement.name1}</td>
               <td>{agreement.name2}</td>
@@ -182,10 +203,10 @@ const Agreements = ({ currentUser, loading, ...props }) => {
                 </h4>
               </td>
               <td>{agreement.type}</td>
-              <td>{agreement.date}</td>
+              <td>{agreement.deadline}</td>
               <td>
                 <a
-                  href={agreement.url ? agreement.url[0].Պայմանագիր : ""}
+                  href={agreement.url ? agreement.url.downloadURL : ""}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="primary-link"
@@ -203,7 +224,8 @@ const Agreements = ({ currentUser, loading, ...props }) => {
                 </Button>
               </td> */}
               {currentUser ? (
-                currentUser.displayName === "t hashvapah" ? (
+                currentUser.displayName === "t hashvapah" ||
+                currentUser.displayName === "Vahan Mkrtumyan" ? (
                   <td>
                     <Button
                       variant="contained"
@@ -217,7 +239,7 @@ const Agreements = ({ currentUser, loading, ...props }) => {
                 ) : null
               ) : null}
               {currentUser ? (
-                currentUser.displayName !== "t hashvapah" ? (
+                currentUser.displayName !== "Vahan Mkrtumyan" ? (
                   <td>
                     <Button
                       onClick={() => handleAdd(agreement)}
@@ -237,7 +259,7 @@ const Agreements = ({ currentUser, loading, ...props }) => {
       <Transactions agreement={agreement} show={show} close={handleClose} />
       <AgreementChange agreement={agreement} show={show1} close={handleClose} />
       <Backdrop show={show || show1 || show2} close={handleClose} />
-      <Documents agreement={agreement} show={show2} close={handleClose}/>
+      <Document agreement={agreement} show={show2} close={handleClose} />
     </div>
   );
 };

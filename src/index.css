@@ -44,10 +44,6 @@ code {
   color: #263345;
 }
 
-.table td:first-child {
-  cursor: pointer;
-}
-
 .table td:not(:last-child) {
   border-right: 1px solid #ebedee;
 }
@@ -182,6 +178,7 @@ table td:nth-last-child(2) {
 .form-style-6 input[type="url"],
 .form-style-6 textarea,
 .form-style-6 select {
+  transition: all 0.3s ease-in-out;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
