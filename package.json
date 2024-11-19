@@ -9,7 +9,7 @@
     "@material-ui/pickers": "^3.2.0",
     "autosuggest-highlight": "^3.1.1",
     "date-fns": "^2.0.0-beta.2",
-    "firebase": "^6.3.1",
+    "firebase": "^10.9.0",
     "material-ui-pickers": "^2.2.4",
     "react": "^16.8.6",
     "react-autosuggest": "^9.4.3",
